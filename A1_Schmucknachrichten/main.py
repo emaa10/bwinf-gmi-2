@@ -1,6 +1,35 @@
 import argparse
 import heapq
 
+
+class Node:
+    def __init__(self, char, freq):
+        self.char = char
+        self.freq = freq
+        self.left = None
+        self.right = None
+
+    def __lt__(self, other):
+        return self.freq < other.freq
+
+
+
+def build_huffman_tree(counts):
+    heap = [Node(char, freq) for char, freq in counts]
+    heapq.heapify(heap)
+
+    while len(heap) > 1:
+        left = heapq.heappop(heap)
+        right = heapq.heappop(heap)
+        parent = Node(None, left.freq + right.freq)
+        parent.left = left
+        parent.right = right
+        heapq.heappush(heap, parent)
+
+    return heap[0]
+
+
+
 parser = argparse.ArgumentParser()
 parser.add_argument("--file", required=True, help="Pfad zur Eingabedatei")
 args = parser.parse_args()
